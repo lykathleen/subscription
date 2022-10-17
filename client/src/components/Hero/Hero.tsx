@@ -8,10 +8,30 @@ const HeroComponent = styled.header`
   background-alignment: center;
 `
 
+const HeaderContainer = styled.div`
+  background-color: rgb(5, 148, 112);
+  padding: 3rem;
+  color: white;
+  width: 32.5rem
+`
+const Heading = styled.h1`
+  font-size: 5rem;
+`
+
+const Subheading = styled.h3`
+  margin: 1rem 0;
+  font-weight: 400;
+`
+
 const Hero = () => {
   return ( 
     <HeroComponent>
-      BLAH
+      <HeaderContainer>
+        <Heading>Feed your mind with the best</Heading>
+        <Subheading>
+          Grow, learn, and be more aware of food options that will lead to a healthier lifestyle.
+        </Subheading>
+      </HeaderContainer>
     </HeroComponent>
    );
 }
