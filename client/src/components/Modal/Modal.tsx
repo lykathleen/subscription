@@ -18,6 +18,8 @@ const ModalComponent = ({ text, variant }: ModalProps) => {
       <Button
         onClick={handleDisplay}
         variant={variant}
+        size="lg"
+        style={{marginRight: '1rem', padding: '0.5rem 3rem'}}
       >
         {text}
       </Button>
