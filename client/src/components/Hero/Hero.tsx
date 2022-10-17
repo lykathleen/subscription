@@ -32,7 +32,14 @@ const Hero = () => {
         <Subheading>
           Grow, learn, and be more aware of food options that will lead to a healthier lifestyle.
         </Subheading>
-        <ModalComponent />
+        <ModalComponent 
+          text="Signup"
+          variant="primary"
+        />
+        <ModalComponent 
+          text="Login"
+          variant="danger"
+        />
       </HeaderContainer>
     </HeroComponent>
    );

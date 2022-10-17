@@ -1,7 +1,12 @@
 import { Modal, Button, InputGroup, FormControl } from "react-bootstrap";
 import { useState } from 'react';
 
-const ModalComponent = () => {
+interface ModalProps {
+  text: string;
+  variant: "primary" | "danger"
+}
+
+const ModalComponent = ({ text, variant }: ModalProps) => {
 
   const [display, setDisplay] = useState(false);
 
@@ -12,8 +17,9 @@ const ModalComponent = () => {
     <>
       <Button
         onClick={handleDisplay}
+        variant={variant}
       >
-        Signup
+        {text}
       </Button>
 
       <Modal
@@ -22,7 +28,7 @@ const ModalComponent = () => {
       >
         <Modal.Header>
           <Modal.Title>
-            Signup
+            {text}
           </Modal.Title>
         </Modal.Header>
 
@@ -47,7 +53,7 @@ const ModalComponent = () => {
 
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>Cancel</Button>
-          <Button variant="primary">Signup</Button>
+          <Button variant="primary">{text}</Button>
 
         </Modal.Footer>
       </Modal>
