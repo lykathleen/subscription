@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import ModalComponent from "../Modal/Modal";
 
 const HeroComponent = styled.header`
   padding: 5rem 0;
@@ -31,6 +32,7 @@ const Hero = () => {
         <Subheading>
           Grow, learn, and be more aware of food options that will lead to a healthier lifestyle.
         </Subheading>
+        <ModalComponent />
       </HeaderContainer>
     </HeroComponent>
    );
