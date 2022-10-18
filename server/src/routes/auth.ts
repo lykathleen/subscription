@@ -72,4 +72,56 @@ router.post('/signup',
   res.send(user)
 })
 
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Validating whether user exists
+  const user = await User.findOne({email});
+
+  if(!user){
+    return res.json({
+      errors: [
+        {
+          msg: "User does not exist"
+        }
+        ],
+      data: null
+    })
+  }
+
+  // Comparing password and db password
+  const isMatch = await bcrypt.compare(password, user.password)
+  if(!isMatch){
+    return res.json({
+      errors: [
+        {
+          msg: "Invalid credentials"
+        }
+        ],
+      data: null
+    })
+  }
+
+  // If all good, return jwt
+  const token = await JWT.sign(
+    {email: user.email},
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: 360000
+    }
+  );
+
+  return res.json({
+    errors: [],
+    data: {
+      token,
+      user: {
+        is: user._id,
+        email: user.email
+      }
+    }
+  })
+
+})
+
 export default router;
