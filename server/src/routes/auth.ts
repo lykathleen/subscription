@@ -1,8 +1,8 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
+import User from '../../models/user';
 
 const router = express.Router();
-
 
 router.post('/signup', 
   body('email').isEmail().withMessage("The emaail is invalid"),
@@ -17,17 +17,23 @@ router.post('/signup',
         msg: error.msg
       }
     });
-    return res.json({errors})
+    return res.json({errors, data: null})
   }
 
   const { email, password } = req.body;
 
-  res.json({
-    email,
-    password,
-  });
-  
-  res.send("SIGNUP ROUTE")
+  const user = await User.findOne({email})
+  if(user){
+    return res.json({
+      errors: [
+        {
+          msg: "Email already exists"
+        }
+      ],
+      data: null
+    });
+  }
+  res.send(user)
 })
 
 export default router;
