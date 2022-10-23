@@ -1,7 +1,7 @@
 import { Modal, Button, InputGroup, FormControl } from "react-bootstrap";
 import { useState } from 'react';
 import axios from 'axios';
-
+import styled from 'styled-components'
 import { SIGNUP_URL, LOGIN_URL } from '../../utils/constants'
 
 interface ModalProps {
@@ -10,11 +10,16 @@ interface ModalProps {
   isSignupFlow: boolean
 }
 
+const ErrorMessage = styled.p`
+  color:red
+`
+
 const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
 
   const [display, setDisplay] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleClose = () => setDisplay(false);
   const handleDisplay = () => setDisplay(true);
@@ -22,18 +27,24 @@ const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
     let data;
 
     if(isSignupFlow) {
-      const response = await axios.post("http://localhost:8080/auth/signup", {
+      const {data: signUpData} = await axios.post("http://localhost:8080/auth/signup", {
         email,
         password
       });
-      console.log(response);
+      data = signUpData
+      
       
     } else {
-      const response = await axios.post(LOGIN_URL, {
+      const {data: loginData} = await axios.post(LOGIN_URL, {
         email,
         password
-    })}   
+    });
+      data = loginData
+    }   
 
+    if(data.errors.length){
+      setError(data.errors[0].msg)
+    }
   }
 
   return ( 
@@ -78,9 +89,11 @@ const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </InputGroup>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
         </Modal.Body>
 
         <Modal.Footer>
+          
           <Button variant="secondary" onClick={handleClose}>Cancel</Button>
           <Button variant="primary" onClick={handleClick}>{text}</Button>
 
