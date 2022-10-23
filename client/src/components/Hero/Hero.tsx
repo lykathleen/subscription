@@ -35,10 +35,12 @@ const Hero = () => {
         <ModalComponent 
           text="Signup"
           variant="primary"
+          isSignupFlow={true}
         />
         <ModalComponent 
           text="Login"
           variant="danger"
+          isSignupFlow={false}
         />
       </HeaderContainer>
     </HeroComponent>
