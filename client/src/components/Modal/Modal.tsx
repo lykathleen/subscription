@@ -2,7 +2,8 @@ import { Modal, Button, InputGroup, FormControl } from "react-bootstrap";
 import { useState } from 'react';
 import axios from 'axios';
 import styled from 'styled-components'
-import { SIGNUP_URL, LOGIN_URL } from '../../utils/constants'
+import { SIGNUP_URL, LOGIN_URL } from '../../utils/constants';
+import { Navigate, useNavigate } from 'react-router-dom'
 
 interface ModalProps {
   text: string;
@@ -21,13 +22,15 @@ const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const navigate = useNavigate();
+
   const handleClose = () => setDisplay(false);
   const handleDisplay = () => setDisplay(true);
   const handleClick = async () => {
     let data;
 
     if(isSignupFlow) {
-      const {data: signUpData} = await axios.post("http://localhost:8080/auth/signup", {
+      const {data: signUpData} = await axios.post(SIGNUP_URL, {
         email,
         password
       });
@@ -43,9 +46,14 @@ const ModalComponent = ({ text, variant, isSignupFlow }: ModalProps) => {
     }   
 
     if(data.errors.length){
-      setError(data.errors[0].msg)
+      return setError(data.errors[0].msg)
     }
+
+    localStorage.setItem('token', data.data.token)
+    navigate("/articles")
   }
+
+  
 
   return ( 
     <>
