@@ -127,7 +127,7 @@ router.post("/login", async (req, res) => {
 
 // Intercepting request to check if authenticated
 router.get('/me', checkAuth, async (req, res) => {
-  res.send("ME ROUTE")
+  res.send(req.user);
 });
 
 export default router;
