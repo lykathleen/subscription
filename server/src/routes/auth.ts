@@ -8,7 +8,7 @@ import { checkAuth } from '../middleware/checkAuth';
 const router = express.Router();
 
 router.post('/signup', 
-  body('email').isEmail().withMessage("The emaail is invalid"),
+  body('email').isEmail().withMessage("The email is invalid"),
   body('password').isLength({ min: 5 }).withMessage("The password must be five characters long"),
   
   async (req: express.Request , res: express.Response) => {
@@ -78,6 +78,7 @@ router.post("/login", async (req, res) => {
 
   // Validating whether user exists
   const user = await User.findOne({email});
+  const isMatch = await bcrypt.compare(password, user?.password!)
 
   if(!user){
     return res.json({
@@ -91,7 +92,6 @@ router.post("/login", async (req, res) => {
   }
 
   // Comparing password and db password
-  const isMatch = await bcrypt.compare(password, user.password)
   if(!isMatch){
     return res.json({
       errors: [
@@ -105,10 +105,10 @@ router.post("/login", async (req, res) => {
 
   // If all good, return jwt
   const token = await JWT.sign(
-    {email: user.email},
+    { email: user.email },
     process.env.JWT_SECRET as string,
     {
-      expiresIn: 360000
+      expiresIn: 360000,
     }
   );
 
@@ -117,17 +117,26 @@ router.post("/login", async (req, res) => {
     data: {
       token,
       user: {
-        is: user._id,
-        email: user.email
-      }
-    }
-  })
-
-})
+        id: user._id,
+        email: user.email,
+      },
+    },
+  });
+});
 
 // Intercepting request to check if authenticated
-router.get('/me', checkAuth, async (req, res) => {
-  res.send(req.user);
+router.get("/me", checkAuth, async (req, res) => {
+  const user = await User.findOne({ email: req.user });
+
+  return res.json({
+    errors: [],
+    data: {
+      user: {
+        id: user?._id,
+        email: user?.email,
+      },
+    },
+  });
 });
 
 export default router;
